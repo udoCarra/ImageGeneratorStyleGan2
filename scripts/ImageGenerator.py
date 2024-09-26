@@ -35,12 +35,20 @@ class ImageGenerator:
         self.path_model = path_model  # Chemin du modèle
         self.path_direction_vector_age = path_direction_vector_age  # Vecteur de direction d'âge
         self.path_calculted = path_calculted
-        self.path_vecteur_calculted = None
         self.model = self.__load_model()  # Chargement du modèle
         self.ouput_path_image_test =os.path.join(path_output, ImageGenerator.IMAGE_TEST_FILE_NAME)
-
+        self.path_vecteur_calculted = None
+        self.vectors_calculated = self._load_vector_calculated(path_calculted)
+        
         self.logging.info("ImageGenerator initialisé avec succès.")
 
+    def _load_vector_calculated(self, path_calculted):
+        dictVector = {}
+        for root, dirs, files in os.walk(path_calculted):
+            for file in files:
+                dictVector[file] = os.path.join(root, file)
+        return dictVector
+        
     def load_image(self):
         """
         Charge et prépare l'image d'entrée pour la génération.
@@ -146,20 +154,23 @@ class ImageGenerator:
         """
         return w_avg + (w_plus - w_avg) * truncation_psi
 
-    def load_vector(self):
+    def load_vector(self, vector_to_use):
         """
         Charge un vecteur latent depuis un fichier.
 
         Returns:
             torch.Tensor: Le vecteur latent chargé.
         """
+        if vector_to_use is not None and vector_to_use in self.vectors_calculated :
+            self.path_vecteur_calculted = self.vectors_calculated[vector_to_use]
+            
         self.logging.info(f"Chargement du vecteur latent depuis {self.path_vecteur_calculted}...")
         latent_vector = np.load(self.path_vecteur_calculted)
         latent_vector = torch.from_numpy(latent_vector).to(self.__device)
         self.logging.info("Vecteur latent chargé avec succès.")
         return latent_vector
 
-    def interpolate_age(self, start_age=0, end_age=30, steps=30):
+    def interpolate_age(self, vector_to_use, start_age=0, end_age=30, steps=30):
         """
         Interpole entre plusieurs vecteurs latents pour simuler l'effet de l'âge.
 
@@ -173,7 +184,7 @@ class ImageGenerator:
         """
         self.logging.info(f"Interpolation des âges de {start_age} à {end_age} sur {steps} étapes.")
         # Charger le vecteur latent
-        latent_vector = self.load_vector()
+        latent_vector = self.load_vector(vector_to_use)
 
         # Charger la direction de l'âge
         age_direction = np.load(self.path_direction_vector_age)
@@ -189,11 +200,11 @@ class ImageGenerator:
         self.logging.info("Interpolation terminée.")
         return latent_vectors
     
-    def save_to_image(self):
+    def save_to_image(self, vector_to_use):
         print('save_to_image')
 
         # Charger le vecteur latent (dans l'espace W+)
-        latent_vector_W = self.load_vector()
+        latent_vector_W = self.load_vector(vector_to_use)
 
         # Vérifier que le vecteur latent a bien 3 dimensions : [batch_size, num_layers, latent_dim]
         if latent_vector_W.ndim != 3:
@@ -214,7 +225,7 @@ class ImageGenerator:
         return
 
 
-    def generate_timelapse(self, truncation_psi=0.5):
+    def generate_timelapse(self,vector_to_use, truncation_psi=0.5):
         """
         Génère un timelapse en utilisant une série de vecteurs latents et sauvegarde les images générées.
 
@@ -223,7 +234,7 @@ class ImageGenerator:
         """
         self.logging.info("Génération du timelapse...")
         # Obtenir les vecteurs latents interpolés par l'âge
-        latents = self.interpolate_age()
+        latents = self.interpolate_age(vector_to_use)
 
         # Obtenir w_avg (moyenne latente)
         w_avg = self.model.mapping.w_avg

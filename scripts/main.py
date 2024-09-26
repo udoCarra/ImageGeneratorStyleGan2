@@ -22,12 +22,12 @@ PATH_CALCUL = '../calculated/'
 PATH_MODEL = '../src/stylegan3-t-ffhq-1024x1024.pkl'
 PATH_DIRECTION_VECTOR_AGE = '../src/interfacegan/boundaries/stylegan_ffhq_age_boundary.npy'
 DEVICE_TYPE = 'cuda'
-PROJ_NB_STEPS = 10000
+PROJ_NB_STEPS = 5000
 START_AGE = 0
 END_AGE = 30
 RELOAD_PROJ = True
-TRUNCATION_PSI = 0.7
-
+TRUNCATION_PSI = 0.5
+VECTOR_CALCULATED_TO_USE =  None #'projected_latent_10000.npy' # si None -> recalcul
 
 import shutil
 import logging
@@ -59,13 +59,13 @@ def main():
             path_direction_vector_age=PATH_DIRECTION_VECTOR_AGE
         )
         
-        if RELOAD_PROJ:
+        if RELOAD_PROJ or VECTOR_CALCULATED_TO_USE is None:
             # Projeter l'image dans l'espace latent
             generator.project(nb_steps=PROJ_NB_STEPS)
         
-        generator.save_to_image()
+        generator.save_to_image(VECTOR_CALCULATED_TO_USE)
         # Générer le timelapse à partir des vecteurs latents interpolés
-        generator.generate_timelapse(truncation_psi=TRUNCATION_PSI)
+        generator.generate_timelapse(VECTOR_CALCULATED_TO_USE, truncation_psi=TRUNCATION_PSI)
 
         logging.info("Exécution terminée avec succès")
 
