@@ -8,6 +8,7 @@ import dnnlib
 import legacy
 import logging
 from logger import init_log, LOGGER_NAME
+import lpips
 
 
 class ImageGenerator:
@@ -107,41 +108,86 @@ class ImageGenerator:
         target_features = vgg(target_img)
         return torch.nn.functional.mse_loss(gen_features, target_features)
 
-    def project(self, nb_steps=2000, reg_weight=0.001):
+    def project(self, nb_steps=15000, reg_weight=0.0005, stop_threshold=1e-5):
         """
         Projette une image dans l'espace latent du modèle StyleGAN3 en optimisant un vecteur latent.
 
         Args:
-            nb_steps (int, optional): Le nombre d'étapes d'optimisation. Par défaut 2000.
-            reg_weight (float, optional): Le poids de régularisation L2. Par défaut 0.001.
+            nb_steps (int, optional): Le nombre d'étapes d'optimisation. Par défaut 15000.
+            reg_weight (float, optional): Le poids de régularisation L2. Par défaut 0.00005.
+            stop_threshold (float, optional): Le seuil d'arrêt anticipé basé sur la stagnation de la perte. Par défaut 1e-5.
         """
         self.logging.info(f"Début de la projection avec {nb_steps} étapes.")
+
         # Charger l'image d'entrée
         image = self.load_image()
 
-        # Charger VGG pré-entraîné pour la perte perceptuelle
+        # Initialiser le modèle VGG pour LPIPS
         vgg = models.vgg16(pretrained=True).features[:16].to(self.__device).eval()
+        loss_fn = lpips.LPIPS(net='vgg').to(self.__device)
 
-        # Initialiser le vecteur latent dans Z et mapper dans W
-        z = torch.randn([1, self.model.z_dim], device=self.__device)
-        w = self.model.mapping(z, None)
+        # Utiliser la moyenne de l'espace latent W comme initialisation
+        w_avg = self.model.mapping.w_avg
 
-        w_plus = w.detach().clone().requires_grad_(True)
-        optimizer = torch.optim.Adam([w_plus], lr=0.001)
+        # Obtenir le nombre de couches (num_ws) pour le modèle
+        num_ws = self.model.mapping.num_ws
+
+        # Initialiser w_plus à partir de w_avg et le reformater avec la bonne forme
+        w_plus = w_avg.unsqueeze(0).repeat(1, num_ws, 1).clone().detach().requires_grad_(True)
+
+        # Utiliser Adam pour optimiser W+
+        optimizer = torch.optim.Adam([w_plus], lr=0.0005)
+
+        previous_loss = float('inf')
+        stagnation_counter = 0
 
         for step in range(nb_steps):
             optimizer.zero_grad()
+
+            # Générer l'image à partir du vecteur latent
             img_gen = self.model.synthesis(w_plus, noise_mode='const')
 
-            loss = torch.nn.functional.mse_loss(img_gen, image) + 0.1 * self.__perceptual_loss(vgg, img_gen, image)
-            reg_loss = reg_weight * torch.norm(w_plus, p=2)
-            total_loss = loss + reg_loss
+            # Calculer la perte perceptuelle avec LPIPS
+            perceptual_loss = loss_fn(img_gen, image)
 
+            # Calculer la perte MSE pour la correspondance pixel par pixel
+            mse_loss = torch.nn.functional.mse_loss(img_gen, image)
+
+            # Combiner les pertes LPIPS et MSE, et ajouter la régularisation
+            total_loss = 0.2 * perceptual_loss + 0.8 * mse_loss + reg_weight * torch.norm(w_plus, p=2)
+
+            # Backpropagation et mise à jour des paramètres
             total_loss.backward()
             optimizer.step()
 
+            # Enregistrer la progression et afficher la perte toutes les 100 étapes
             if step % 100 == 0:
                 self.logging.info(f"Étape {step}/{nb_steps}, Perte totale: {total_loss.item()}.")
+
+            # Sauvegarder une image toutes les 500 étapes pour suivre la progression
+            if step % 500 == 0:
+                img_save = (img_gen * 127.5 + 128).clamp(0, 255).to(torch.uint8)
+                img_save = img_save.permute(0, 2, 3, 1).cpu().numpy()[0]
+                pil_img = Image.fromarray(img_save, 'RGB')
+                image_path_vecteur_calculted = os.path.join(self.path_output, f'output_step_{step}.png')
+                pil_img.save(image_path_vecteur_calculted)
+                print(f"Image sauvegardée à l'étape {step}")
+
+            # Réduire le learning rate de manière progressive au lieu d'un seul changement brusque
+            if step > 8000:
+                for param_group in optimizer.param_groups:
+                    param_group['lr'] = 0.0001
+
+            # Arrêt anticipé si la perte stagne (basée sur le seuil de stagnation)
+            if abs(previous_loss - total_loss.item()) < stop_threshold:
+                stagnation_counter += 1
+                if stagnation_counter >= 500:  # Arrête si la perte n'a pas évolué pendant 500 itérations
+                    self.logging.info(f"Arrêt anticipé à l'étape {step}, Perte totale: {total_loss.item()}.")
+                    break
+            else:
+                stagnation_counter = 0
+
+            previous_loss = total_loss.item()
 
         # Sauvegarder le vecteur latent W+ résultant dans le répertoire de sortie
         self.path_vecteur_calculted = os.path.join(self.path_calculted, 'projected_latent_{0}.npy'.format(nb_steps))
@@ -200,7 +246,7 @@ class ImageGenerator:
         self.logging.info("Interpolation terminée.")
         return latent_vectors
     
-    def save_to_image(self, vector_to_use):
+    def save_to_image(self, vector_to_use, ouput_path_image_test):
         print('save_to_image')
 
         # Charger le vecteur latent (dans l'espace W+)
@@ -212,7 +258,6 @@ class ImageGenerator:
 
         # Générer l'image avec StyleGAN3 (utiliser directement le vecteur W+)
         manipulated_img = self.model.synthesis(latent_vector_W, noise_mode='const')
-        print(manipulated_img.shape)  # Vérifiez la forme avant de permuter
 
         # Convertir et afficher l'image
         manipulated_img = (manipulated_img * 127.5 + 128).clamp(0, 255).to(torch.uint8)
@@ -220,8 +265,8 @@ class ImageGenerator:
         manipulated_pil_img = Image.fromarray(manipulated_img[0].cpu().numpy(), 'RGB')
         manipulated_pil_img.show()
 
-        # Sauvegarder l'image dans un fichier local
-        manipulated_pil_img.save(self.ouput_path_image_test)
+
+        manipulated_pil_img.save(ouput_path_image_test)
         return
 
 
@@ -262,3 +307,30 @@ class ImageGenerator:
                 print(f"Image sauvegardée : {outputPathTimelapse}")
 
         return
+
+
+    def calculate_lpips_distance(self, generated_image, original_image):
+        """
+        Calcule la distance perceptuelle LPIPS entre deux images.
+
+        Args:
+            generated_image (torch.Tensor): Image générée de taille [1, 3, H, W], normalisée entre [-1, 1].
+            original_image (torch.Tensor): Image originale de taille [1, 3, H, W], normalisée entre [-1, 1].
+
+        Returns:
+            float: La distance LPIPS entre les deux images.
+        """
+        # Initialiser le modèle LPIPS (basé sur VGG)
+        loss_fn = lpips.LPIPS(net='vgg').eval()
+
+        # S'assurer que les images sont sur le même dispositif que le modèle
+        generated_image = generated_image.to(self.__device)
+        original_image = original_image.to(self.__device)
+        loss_fn = loss_fn.to(self.__device)
+
+        # Calcul de la distance LPIPS
+        with torch.no_grad():
+            lpips_distance = loss_fn(generated_image, original_image)
+
+        return lpips_distance.item()
+

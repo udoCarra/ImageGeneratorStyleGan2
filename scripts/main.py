@@ -16,18 +16,23 @@ from ImageGenerator import ImageGenerator
 from logger import init_log  # Importation de la fonction pour initialiser le logger
 
 # CONFIG
-PATH_INPUT = '../data/test_photo.png'
+PATH_INPUT = '../data/test_enfant.png'
 PATH_OUTPUT = '../output/'
 PATH_CALCUL = '../calculated/'
 PATH_MODEL = '../src/stylegan3-t-ffhq-1024x1024.pkl'
 PATH_DIRECTION_VECTOR_AGE = '../src/interfacegan/boundaries/stylegan_ffhq_age_boundary.npy'
 DEVICE_TYPE = 'cuda'
-PROJ_NB_STEPS = 5000
+PROJ_NB_STEPS = 15000
 START_AGE = 0
 END_AGE = 30
-RELOAD_PROJ = True
 TRUNCATION_PSI = 0.5
-VECTOR_CALCULATED_TO_USE =  None #'projected_latent_10000.npy' # si None -> recalcul
+VECTOR_CALCULATED_TO_USE =  'projected_latent_15000.npy' # si None -> recalcul
+# Sauvegarder l'image de test 
+if VECTOR_CALCULATED_TO_USE is None:
+    formated_name = "projected_latent_{0}_image_test.png".format(PROJ_NB_STEPS)
+else:
+    formated_name = VECTOR_CALCULATED_TO_USE + "_" + "image_test.png"
+ouput_path_image_test = os.path.join(PATH_CALCUL, formated_name)
 
 import shutil
 import logging
@@ -59,15 +64,18 @@ def main():
             path_direction_vector_age=PATH_DIRECTION_VECTOR_AGE
         )
         
-        if RELOAD_PROJ or VECTOR_CALCULATED_TO_USE is None:
+        if VECTOR_CALCULATED_TO_USE is None:
             # Projeter l'image dans l'espace latent
             generator.project(nb_steps=PROJ_NB_STEPS)
         
-        generator.save_to_image(VECTOR_CALCULATED_TO_USE)
+        generator.save_to_image(VECTOR_CALCULATED_TO_USE, ouput_path_image_test)
         # Générer le timelapse à partir des vecteurs latents interpolés
         generator.generate_timelapse(VECTOR_CALCULATED_TO_USE, truncation_psi=TRUNCATION_PSI)
 
         logging.info("Exécution terminée avec succès")
+        score = generator.calculate_lpips_distance(ouput_path_image_test, PATH_INPUT)
+        logging.info("Score : {0}".format(score))
+        
 
     except Exception as e:
         logging.error("Une erreur est survenue")

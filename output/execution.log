@@ -1,38 +1,22 @@
-2024-09-25 20:21:36,034 - INFO - Démarrage de l'exécution
-2024-09-25 20:21:36,035 - INFO - Chargement du modèle depuis ../src/stylegan3-t-ffhq-1024x1024.pkl...
-2024-09-25 20:21:43,179 - INFO - Modèle chargé avec succès.
-2024-09-25 20:21:43,180 - INFO - ImageGenerator initialisé avec succès.
-2024-09-25 20:21:43,180 - INFO - Début de la projection avec 10000 étapes.
-2024-09-25 20:21:43,180 - INFO - Chargement de l'image depuis ../data/test_photo.png...
-2024-09-25 20:21:43,237 - INFO - Image redimensionnée à 1024x1024.
-2024-09-25 20:21:43,299 - INFO - Image transformée et prête pour la génération.
-2024-09-25 20:21:49,405 - INFO - Étape 0/10000, Perte totale: 0.8874253034591675.
-2024-09-25 20:22:27,552 - INFO - Étape 100/10000, Perte totale: 0.4539330005645752.
-2024-09-25 20:23:06,063 - INFO - Étape 200/10000, Perte totale: 0.31837591528892517.
-2024-09-25 20:23:44,710 - INFO - Étape 300/10000, Perte totale: 0.27333372831344604.
-2024-09-25 20:24:23,440 - INFO - Étape 400/10000, Perte totale: 0.24509257078170776.
-2024-09-25 20:25:02,186 - INFO - Étape 500/10000, Perte totale: 0.22600063681602478.
-2024-09-25 20:25:40,936 - INFO - Étape 600/10000, Perte totale: 0.2107991874217987.
-2024-09-25 20:26:19,719 - INFO - Étape 700/10000, Perte totale: 0.19758707284927368.
-2024-09-25 20:26:58,441 - INFO - Étape 800/10000, Perte totale: 0.18820101022720337.
-2024-09-25 20:27:37,159 - INFO - Étape 900/10000, Perte totale: 0.18155843019485474.
-2024-09-25 20:28:15,864 - INFO - Étape 1000/10000, Perte totale: 0.17616963386535645.
-2024-09-25 20:28:54,630 - INFO - Étape 1100/10000, Perte totale: 0.17113545536994934.
-2024-09-25 20:29:33,339 - INFO - Étape 1200/10000, Perte totale: 0.1666911542415619.
-2024-09-25 20:30:12,080 - INFO - Étape 1300/10000, Perte totale: 0.16267837584018707.
-2024-09-25 20:30:50,828 - INFO - Étape 1400/10000, Perte totale: 0.15911920368671417.
-2024-09-25 20:31:29,543 - INFO - Étape 1500/10000, Perte totale: 0.15610045194625854.
-2024-09-25 20:32:08,247 - INFO - Étape 1600/10000, Perte totale: 0.15317583084106445.
-2024-09-25 20:32:46,989 - INFO - Étape 1700/10000, Perte totale: 0.15046915411949158.
-2024-09-25 20:33:25,753 - INFO - Étape 1800/10000, Perte totale: 0.1479504108428955.
-2024-09-25 20:34:04,501 - INFO - Étape 1900/10000, Perte totale: 0.14548401534557343.
-2024-09-25 20:34:43,238 - INFO - Étape 2000/10000, Perte totale: 0.14328788220882416.
-2024-09-25 20:35:21,984 - INFO - Étape 2100/10000, Perte totale: 0.1411793828010559.
-2024-09-25 20:36:00,738 - INFO - Étape 2200/10000, Perte totale: 0.13913190364837646.
-2024-09-25 20:36:39,490 - INFO - Étape 2300/10000, Perte totale: 0.13728144764900208.
-2024-09-25 20:37:18,219 - INFO - Étape 2400/10000, Perte totale: 0.13549795746803284.
-2024-09-25 20:37:56,967 - INFO - Étape 2500/10000, Perte totale: 0.1336973011493683.
-2024-09-25 20:38:35,696 - INFO - Étape 2600/10000, Perte totale: 0.1319674253463745.
-2024-09-25 20:39:14,448 - INFO - Étape 2700/10000, Perte totale: 0.1302887201309204.
-2024-09-25 20:39:53,205 - INFO - Étape 2800/10000, Perte totale: 0.1286666989326477.
-2024-09-25 20:40:32,000 - INFO - Étape 2900/10000, Perte totale: 0.12707173824310303.
+2024-09-28 14:48:08,679 - INFO - Démarrage de l'exécution
+2024-09-28 14:48:08,679 - INFO - Chargement du modèle depuis ../src/stylegan3-t-ffhq-1024x1024.pkl...
+2024-09-28 14:48:16,449 - INFO - Modèle chargé avec succès.
+2024-09-28 14:48:16,453 - INFO - ImageGenerator initialisé avec succès.
+2024-09-28 14:48:16,453 - INFO - Chargement du vecteur latent depuis ../calculated/projected_latent_15000.npy...
+2024-09-28 14:48:16,454 - INFO - Vecteur latent chargé avec succès.
+2024-09-28 14:48:21,055 - INFO - Génération du timelapse...
+2024-09-28 14:48:21,055 - INFO - Interpolation des âges de 0 à 30 sur 30 étapes.
+2024-09-28 14:48:21,055 - INFO - Chargement du vecteur latent depuis ../calculated/projected_latent_15000.npy...
+2024-09-28 14:48:21,056 - INFO - Vecteur latent chargé avec succès.
+2024-09-28 14:48:21,058 - INFO - Interpolation terminée.
+2024-09-28 14:48:36,039 - INFO - Exécution terminée avec succès
+2024-09-28 14:48:43,620 - ERROR - Une erreur est survenue
+2024-09-28 14:48:43,620 - ERROR - Détails de l'exception : 
+Traceback (most recent call last):
+  File "/notebooks/scripts/main.py", line 76, in main
+    score = generator.calculate_lpips_distance(ouput_path_image_test, PATH_INPUT)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/notebooks/scripts/ImageGenerator.py", line 327, in calculate_lpips_distance
+    generated_image = generated_image.to(self.__device)
+                      ^^^^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'to'
