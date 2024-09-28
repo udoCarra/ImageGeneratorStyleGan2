@@ -32,3 +32,5 @@ rm -rf /root/.cache/torch_extensions/
 
 git config --global user.email "hugo.carre.fr@gmail.com"
 git config --global user.name "udoCarra"
+ssh-keygen -t rsa -b 4096
+cat /root/.ssh/id_rsa.pub

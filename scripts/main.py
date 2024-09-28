@@ -26,7 +26,7 @@ PROJ_NB_STEPS = 15000
 START_AGE = 0
 END_AGE = 30
 TRUNCATION_PSI = 0.5
-VECTOR_CALCULATED_TO_USE =  'projected_latent_15000.npy' # si None -> recalcul
+VECTOR_CALCULATED_TO_USE =  None #'projected_latent_15000.npy' # si None -> recalcul
 # Sauvegarder l'image de test 
 if VECTOR_CALCULATED_TO_USE is None:
     formated_name = "projected_latent_{0}_image_test.png".format(PROJ_NB_STEPS)

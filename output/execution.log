@@ -1,22 +1,20 @@
-2024-09-28 14:48:08,679 - INFO - Démarrage de l'exécution
-2024-09-28 14:48:08,679 - INFO - Chargement du modèle depuis ../src/stylegan3-t-ffhq-1024x1024.pkl...
-2024-09-28 14:48:16,449 - INFO - Modèle chargé avec succès.
-2024-09-28 14:48:16,453 - INFO - ImageGenerator initialisé avec succès.
-2024-09-28 14:48:16,453 - INFO - Chargement du vecteur latent depuis ../calculated/projected_latent_15000.npy...
-2024-09-28 14:48:16,454 - INFO - Vecteur latent chargé avec succès.
-2024-09-28 14:48:21,055 - INFO - Génération du timelapse...
-2024-09-28 14:48:21,055 - INFO - Interpolation des âges de 0 à 30 sur 30 étapes.
-2024-09-28 14:48:21,055 - INFO - Chargement du vecteur latent depuis ../calculated/projected_latent_15000.npy...
-2024-09-28 14:48:21,056 - INFO - Vecteur latent chargé avec succès.
-2024-09-28 14:48:21,058 - INFO - Interpolation terminée.
-2024-09-28 14:48:36,039 - INFO - Exécution terminée avec succès
-2024-09-28 14:48:43,620 - ERROR - Une erreur est survenue
-2024-09-28 14:48:43,620 - ERROR - Détails de l'exception : 
-Traceback (most recent call last):
-  File "/notebooks/scripts/main.py", line 76, in main
-    score = generator.calculate_lpips_distance(ouput_path_image_test, PATH_INPUT)
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/notebooks/scripts/ImageGenerator.py", line 327, in calculate_lpips_distance
-    generated_image = generated_image.to(self.__device)
-                      ^^^^^^^^^^^^^^^^^^
-AttributeError: 'str' object has no attribute 'to'
+2024-09-28 17:56:34,375 - INFO - Démarrage de l'exécution
+2024-09-28 17:56:34,376 - INFO - Chargement du modèle depuis ../src/stylegan3-t-ffhq-1024x1024.pkl...
+2024-09-28 17:56:41,286 - INFO - Modèle chargé avec succès.
+2024-09-28 17:56:41,288 - INFO - ImageGenerator initialisé avec succès.
+2024-09-28 17:56:41,288 - INFO - save_to_image
+2024-09-28 17:56:41,288 - INFO - Chargement du vecteur latent depuis ../calculated/projected_latent_15000.npy...
+2024-09-28 17:56:41,289 - INFO - Vecteur latent chargé avec succès.
+2024-09-28 17:56:46,245 - INFO - Génération du timelapse...
+2024-09-28 17:56:46,246 - INFO - Interpolation des âges de 0 à 30 sur 30 étapes.
+2024-09-28 17:56:46,246 - INFO - Chargement du vecteur latent depuis ../calculated/projected_latent_15000.npy...
+2024-09-28 17:56:46,247 - INFO - Vecteur latent chargé avec succès.
+2024-09-28 17:56:46,249 - INFO - Interpolation terminée.
+2024-09-28 17:57:00,938 - INFO - Exécution terminée avec succès
+2024-09-28 17:57:03,049 - INFO - Chargement de l'image depuis : ../calculated/projected_latent_15000.npy_image_test.png
+2024-09-28 17:57:03,089 - INFO - Image redimensionnée à 1024x1024.
+2024-09-28 17:57:03,165 - INFO - Image transformée et prête pour la génération.
+2024-09-28 17:57:03,166 - INFO - Chargement de l'image depuis : ../data/test_enfant.png
+2024-09-28 17:57:03,211 - INFO - Image redimensionnée à 1024x1024.
+2024-09-28 17:57:03,283 - INFO - Image transformée et prête pour la génération.
+2024-09-28 17:57:03,593 - INFO - Score : 0.2982162833213806

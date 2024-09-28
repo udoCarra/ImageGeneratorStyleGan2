@@ -50,7 +50,7 @@ class ImageGenerator:
                 dictVector[file] = os.path.join(root, file)
         return dictVector
         
-    def load_image(self):
+    def load_image(self, image_to_load):
         """
         Charge et prépare l'image d'entrée pour la génération.
 
@@ -59,8 +59,8 @@ class ImageGenerator:
         Returns:
             torch.Tensor: L'image transformée sous forme de tenseur PyTorch.
         """
-        self.logging.info(f"Chargement de l'image depuis {self.path_input}...")
-        image = Image.open(self.path_input)
+        self.logging.info(f"Chargement de l'image depuis : {image_to_load}")
+        image = Image.open(image_to_load)
 
         # Redimensionner l'image à 1024x1024
         image = image.resize((1024, 1024))
@@ -73,7 +73,7 @@ class ImageGenerator:
             transforms.Normalize([0.5] * 3, [0.5] * 3)
         ])
 
-        image = Image.open(self.path_input).convert('RGB')
+        image = Image.open(image_to_load).convert('RGB')
         image = transform(image).unsqueeze(0).to(self.__device)
 
         self.logging.info("Image transformée et prête pour la génération.")
@@ -108,7 +108,7 @@ class ImageGenerator:
         target_features = vgg(target_img)
         return torch.nn.functional.mse_loss(gen_features, target_features)
 
-    def project(self, nb_steps=15000, reg_weight=0.0005, stop_threshold=1e-5):
+    def project(self, nb_steps=15000, reg_weight=0.001, stop_threshold=1e-5):
         """
         Projette une image dans l'espace latent du modèle StyleGAN3 en optimisant un vecteur latent.
 
@@ -120,7 +120,7 @@ class ImageGenerator:
         self.logging.info(f"Début de la projection avec {nb_steps} étapes.")
 
         # Charger l'image d'entrée
-        image = self.load_image()
+        image = self.load_image(self.path_input)
 
         # Initialiser le modèle VGG pour LPIPS
         vgg = models.vgg16(pretrained=True).features[:16].to(self.__device).eval()
@@ -177,6 +177,9 @@ class ImageGenerator:
             if step > 8000:
                 for param_group in optimizer.param_groups:
                     param_group['lr'] = 0.0001
+            elif step > 12000:
+                for param_group in optimizer.param_groups:
+                    param_group['lr'] = 0.00005
 
             # Arrêt anticipé si la perte stagne (basée sur le seuil de stagnation)
             if abs(previous_loss - total_loss.item()) < stop_threshold:
@@ -247,7 +250,7 @@ class ImageGenerator:
         return latent_vectors
     
     def save_to_image(self, vector_to_use, ouput_path_image_test):
-        print('save_to_image')
+        self.logging.info('save_to_image')
 
         # Charger le vecteur latent (dans l'espace W+)
         latent_vector_W = self.load_vector(vector_to_use)
@@ -309,7 +312,7 @@ class ImageGenerator:
         return
 
 
-    def calculate_lpips_distance(self, generated_image, original_image):
+    def calculate_lpips_distance(self, generated_image_path, original_image_path):
         """
         Calcule la distance perceptuelle LPIPS entre deux images.
 
@@ -324,13 +327,14 @@ class ImageGenerator:
         loss_fn = lpips.LPIPS(net='vgg').eval()
 
         # S'assurer que les images sont sur le même dispositif que le modèle
-        generated_image = generated_image.to(self.__device)
-        original_image = original_image.to(self.__device)
+        generated_image = self.load_image(generated_image_path)
+        original_image = self.load_image(original_image_path)
         loss_fn = loss_fn.to(self.__device)
 
         # Calcul de la distance LPIPS
         with torch.no_grad():
             lpips_distance = loss_fn(generated_image, original_image)
-
+        print(lpips_distance)
+        print(lpips_distance.item())
         return lpips_distance.item()
 
