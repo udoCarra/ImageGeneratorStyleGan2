@@ -1,0 +1,18 @@
+2024-09-29 20:03:20,350 - INFO - Démarrage de l'exécution
+2024-09-29 20:03:20,350 - INFO - Chargement du modèle depuis ../src/stylegan3-t-ffhq-1024x1024.pkl...
+2024-09-29 20:03:25,674 - INFO - Modèle chargé avec succès.
+2024-09-29 20:03:25,675 - INFO - ImageGenerator initialisé avec succès.
+2024-09-29 20:03:25,676 - INFO - Chargement de l'image depuis : ../data/test_enfant.png
+2024-09-29 20:03:25,746 - INFO - Image redimensionnée à 1024x1024.
+2024-09-29 20:03:25,816 - INFO - Image transformée et prête pour la génération.
+2024-09-29 20:03:27,514 - INFO - Optimisation à la résolution 64x64
+2024-09-29 20:03:30,942 - INFO - Étape 0/5000 à 64x64, Perte totale: 0.3383486568927765
+2024-09-29 20:03:57,081 - INFO - Étape 100/5000 à 64x64, Perte totale: 0.3383486568927765
+2024-09-29 20:04:23,374 - INFO - Étape 200/5000 à 64x64, Perte totale: 0.3383486568927765
+2024-09-29 20:04:49,829 - INFO - Étape 300/5000 à 64x64, Perte totale: 0.3383486568927765
+2024-09-29 20:05:16,374 - INFO - Étape 400/5000 à 64x64, Perte totale: 0.3383486568927765
+2024-09-29 20:05:43,002 - INFO - Étape 500/5000 à 64x64, Perte totale: 0.3383486568927765
+2024-09-29 20:05:43,005 - INFO - Arrêt anticipé à l'étape 500, Perte totale: 0.3383486568927765.
+2024-09-29 20:05:43,005 - INFO - Optimisation à la résolution 128x128
+2024-09-29 20:05:43,275 - INFO - Étape 0/5000 à 128x128, Perte totale: 0.3602490723133087
+2024-09-29 20:06:10,212 - INFO - Étape 100/5000 à 128x128, Perte totale: 0.3602490723133087

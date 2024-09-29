@@ -1,0 +1,10 @@
+2024-09-29 19:59:51,447 - INFO - Démarrage de l'exécution
+2024-09-29 19:59:51,447 - INFO - Chargement du modèle depuis ../src/stylegan3-t-ffhq-1024x1024.pkl...
+2024-09-29 19:59:56,618 - INFO - Modèle chargé avec succès.
+2024-09-29 19:59:56,619 - INFO - ImageGenerator initialisé avec succès.
+2024-09-29 19:59:56,620 - INFO - Chargement de l'image depuis : ../data/test_enfant.png
+2024-09-29 19:59:56,654 - INFO - Image redimensionnée à 1024x1024.
+2024-09-29 19:59:56,692 - INFO - Image transformée et prête pour la génération.
+2024-09-29 19:59:58,320 - INFO - Optimisation à la résolution 64x64
+2024-09-29 20:00:01,885 - INFO - Étape 0/5000 à 64x64, Perte totale: 0.3383486568927765
+2024-09-29 20:00:28,019 - INFO - Étape 100/5000 à 64x64, Perte totale: 0.3383486568927765

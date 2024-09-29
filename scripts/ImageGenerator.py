@@ -9,7 +9,8 @@ import legacy
 import logging
 from logger import init_log, LOGGER_NAME
 import lpips
-
+from MultiScalePerceptualLoss import MultiScalePerceptualLoss
+import torch.nn.functional as F
 
 class ImageGenerator:
     """
@@ -108,7 +109,118 @@ class ImageGenerator:
         target_features = vgg(target_img)
         return torch.nn.functional.mse_loss(gen_features, target_features)
 
-    def project(self, nb_steps=15000, reg_weight=0.001, stop_threshold=1e-5):
+
+    def _lerp(self, a, b, t):
+        """
+        Interpolation linéaire entre deux tenseurs a et b selon un facteur t.
+        """
+        return a + t * (b - a)
+
+    def project_with_progressive_growing(self, initial_resolution=64, final_resolution=1024, nb_steps_per_resolution=5000, stop_threshold=1e-5, reg_weight=0.0005):
+        """
+        Projette une image dans l'espace latent du modèle StyleGAN3 en utilisant la méthode de Progressive Growing avec interpolation linéaire (lerp).
+
+        Args:
+            initial_resolution (int): La résolution initiale pour démarrer la projection.
+            final_resolution (int): La résolution finale à atteindre (jusqu'à 1024x1024).
+            nb_steps_per_resolution (int): Le nombre d'étapes d'optimisation pour chaque niveau de résolution.
+            stop_threshold (float): Seuil de stagnation pour l'arrêt anticipé.
+            reg_weight (float): Le poids de la régularisation L2.
+        """
+        self.model.train()  # Assure-toi que le modèle est en mode d'entraînement
+
+        # Résolutions intermédiaires, en doublant à chaque étape jusqu'à la résolution finale de 1024x1024
+        resolutions = [initial_resolution * (2 ** i) for i in range(int(np.log2(final_resolution // initial_resolution)) + 1)]
+
+        # Charger l'image d'entrée et la préparer à la résolution maximale
+        original_image = self.load_image(self.path_input)  # Utilise ta fonction load_image
+
+        # Initialiser le modèle LPIPS
+        loss_fn = lpips.LPIPS(net='vgg').to(self.__device).eval()
+
+        # Utiliser la moyenne de l'espace latent W comme initialisation
+        w_avg = self.model.mapping.w_avg
+        num_ws = self.model.mapping.num_ws
+
+        # Initialiser w_plus à partir de w_avg et le reformater
+        w_plus = w_avg.unsqueeze(0).repeat(1, num_ws, 1).clone().detach().requires_grad_(True)
+
+        optimizer = torch.optim.Adam([w_plus], lr=0.0005)
+
+        previous_loss = float('inf')  # Initialiser la perte précédente à une valeur très élevée
+        stagnation_counter = 0  # Initialiser le compteur de stagnation
+        latents_dict = {}  # Suivi des vecteurs latents à chaque résolution
+
+        for resolution in resolutions:
+            self.logging.info(f"Optimisation à la résolution {resolution}x{resolution}")
+
+            # Redimensionner dynamiquement l'image cible à chaque résolution
+            target_image = F.interpolate(original_image, size=(resolution, resolution), mode='bilinear', align_corners=False)
+
+            # Charger les vecteurs latents de la résolution précédente s'ils existent
+            if resolution in latents_dict:
+                old_w_plus = latents_dict[resolution]
+            else:
+                old_w_plus = w_plus.clone().detach()
+
+            for step in range(nb_steps_per_resolution):
+                optimizer.zero_grad()
+
+                # Calculer l'alpha en fonction de la progression
+                alpha = step / nb_steps_per_resolution
+
+                # Interpolation progressive des latents avec lerp
+                w_plus_interpolated = self._lerp(old_w_plus, w_plus, alpha)
+
+                # Générer une image à partir du vecteur latent interpolé
+                img_gen = self.model.synthesis(w_plus_interpolated, noise_mode='const', force_fp32=True)
+                img_gen = F.interpolate(img_gen, size=(resolution, resolution), mode='bilinear', align_corners=False)
+
+                # Calculer la perte perceptuelle LPIPS
+                perceptual_loss = loss_fn(img_gen, target_image)
+
+                # Calculer la perte MSE
+                mse_loss = torch.nn.functional.mse_loss(img_gen, target_image)
+
+                # Combiner les pertes avec régularisation
+                total_loss = 0.2 * perceptual_loss + 0.8 * mse_loss + reg_weight * torch.norm(w_plus, p=2)
+                total_loss.backward(retain_graph=True)
+                optimizer.step()
+
+                # Enregistrer les progrès et ajuster le taux d'apprentissage
+                if step % 100 == 0:
+                    # Ajouter une vérification pour voir la valeur d'alpha
+                    self.logging.info(f"Alpha à l'étape {step}: {alpha}")
+                    self.logging.info(f"Étape {step}/{nb_steps_per_resolution} à {resolution}x{resolution}, Perte totale: {total_loss.item()}")
+
+                # Sauvegarder l'image toutes les 500 étapes
+                if step % 500 == 0:
+                    img_save = (img_gen * 127.5 + 128).clamp(0, 255).to(torch.uint8)
+                    img_save = img_save.permute(0, 2, 3, 1).cpu().numpy()[0]
+                    pil_img = Image.fromarray(img_save, 'RGB')
+                    image_path_vecteur_calculted = os.path.join(self.path_output, f'output_step_{step}_res_{resolution}.png')
+                    pil_img.save(image_path_vecteur_calculted)
+                    print(f"Image sauvegardée à l'étape {step} pour la résolution {resolution}x{resolution}")
+
+                previous_loss = total_loss.item()
+
+            # Sauvegarder les vecteurs latents pour la résolution actuelle
+            latents_dict[resolution] = w_plus.clone().detach()
+
+            # Réduction du taux d'apprentissage
+            for param_group in optimizer.param_groups:
+                param_group['lr'] = max(0.0001, param_group['lr'] * 0.5)
+
+
+
+        # Sauvegarder le vecteur latent W+ résultant
+        self.path_vecteur_calculted = os.path.join(self.path_calculted, 'projected_latent_final.npy')
+        np.save(self.path_vecteur_calculted, w_plus.detach().cpu().numpy())
+        self.logging.info(f"Vecteur latent projeté sauvegardé dans {self.path_vecteur_calculted}")
+
+
+
+    def project(self, nb_steps=10000, reg_weight=0.001, stop_threshold=1e-5):
         """
         Projette une image dans l'espace latent du modèle StyleGAN3 en optimisant un vecteur latent.
 
@@ -155,10 +267,20 @@ class ImageGenerator:
 
             # Combiner les pertes LPIPS et MSE, et ajouter la régularisation
             total_loss = 0.2 * perceptual_loss + 0.8 * mse_loss + reg_weight * torch.norm(w_plus, p=2)
-
+            
             # Backpropagation et mise à jour des paramètres
             total_loss.backward()
             optimizer.step()
+            
+            
+            # Réduire le learning rate de manière progressive au lieu d'un seul changement brusque
+            if step > 7500:
+                for param_group in optimizer.param_groups:
+                    param_group['lr'] = 0.0001
+
+            if step > 9000:
+                for param_group in optimizer.param_groups:
+                    param_group['lr'] = 0.00001
 
             # Enregistrer la progression et afficher la perte toutes les 100 étapes
             if step % 100 == 0:
@@ -173,14 +295,7 @@ class ImageGenerator:
                 pil_img.save(image_path_vecteur_calculted)
                 print(f"Image sauvegardée à l'étape {step}")
 
-            # Réduire le learning rate de manière progressive au lieu d'un seul changement brusque
-            if step > 8000:
-                for param_group in optimizer.param_groups:
-                    param_group['lr'] = 0.0001
-            elif step > 12000:
-                for param_group in optimizer.param_groups:
-                    param_group['lr'] = 0.00005
-
+                    
             # Arrêt anticipé si la perte stagne (basée sur le seuil de stagnation)
             if abs(previous_loss - total_loss.item()) < stop_threshold:
                 stagnation_counter += 1

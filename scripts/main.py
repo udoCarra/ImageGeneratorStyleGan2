@@ -19,10 +19,11 @@ from logger import init_log  # Importation de la fonction pour initialiser le lo
 PATH_INPUT = '../data/test_enfant.png'
 PATH_OUTPUT = '../output/'
 PATH_CALCUL = '../calculated/'
+PATH_LOGS = '../logs/'
 PATH_MODEL = '../src/stylegan3-t-ffhq-1024x1024.pkl'
 PATH_DIRECTION_VECTOR_AGE = '../src/interfacegan/boundaries/stylegan_ffhq_age_boundary.npy'
 DEVICE_TYPE = 'cuda'
-PROJ_NB_STEPS = 15000
+PROJ_NB_STEPS = 10000
 START_AGE = 0
 END_AGE = 30
 TRUNCATION_PSI = 0.5
@@ -50,7 +51,7 @@ def main():
         os.makedirs(PATH_OUTPUT)
                     
         # Initialiser les logs
-        logging = init_log(PATH_OUTPUT)  # Initialisation du logger
+        logging = init_log(PATH_LOGS)  # Initialisation du logger
 
         logging.info("Démarrage de l'exécution")
 
@@ -66,7 +67,8 @@ def main():
         
         if VECTOR_CALCULATED_TO_USE is None:
             # Projeter l'image dans l'espace latent
-            generator.project(nb_steps=PROJ_NB_STEPS)
+            #generator.project(nb_steps=PROJ_NB_STEPS)
+            generator.project_with_progressive_growing()
         
         generator.save_to_image(VECTOR_CALCULATED_TO_USE, ouput_path_image_test)
         # Générer le timelapse à partir des vecteurs latents interpolés

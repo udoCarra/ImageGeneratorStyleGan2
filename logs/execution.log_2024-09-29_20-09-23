@@ -1,0 +1,17 @@
+2024-09-29 20:09:23,329 - INFO - Démarrage de l'exécution
+2024-09-29 20:09:23,329 - INFO - Chargement du modèle depuis ../src/stylegan3-t-ffhq-1024x1024.pkl...
+2024-09-29 20:09:28,770 - INFO - Modèle chargé avec succès.
+2024-09-29 20:09:28,771 - INFO - ImageGenerator initialisé avec succès.
+2024-09-29 20:09:28,771 - INFO - Chargement de l'image depuis : ../data/test_enfant.png
+2024-09-29 20:09:28,807 - INFO - Image redimensionnée à 1024x1024.
+2024-09-29 20:09:28,871 - INFO - Image transformée et prête pour la génération.
+2024-09-29 20:09:30,580 - INFO - Optimisation à la résolution 64x64
+2024-09-29 20:09:30,581 - ERROR - Une erreur est survenue
+2024-09-29 20:09:30,581 - ERROR - Détails de l'exception : 
+Traceback (most recent call last):
+  File "/notebooks/scripts/main.py", line 71, in main
+    generator.project_with_progressive_growing()
+  File "/notebooks/scripts/ImageGenerator.py", line 173, in project_with_progressive_growing
+    w_plus_interpolated = lerp(old_w_plus, w_plus, alpha)
+                          ^^^^
+NameError: name 'lerp' is not defined

@@ -1,0 +1,17 @@
+2024-09-29 19:34:32,551 - INFO - Démarrage de l'exécution
+2024-09-29 19:34:32,551 - INFO - Chargement du modèle depuis ../src/stylegan3-t-ffhq-1024x1024.pkl...
+2024-09-29 19:34:38,217 - INFO - Modèle chargé avec succès.
+2024-09-29 19:34:38,218 - INFO - ImageGenerator initialisé avec succès.
+2024-09-29 19:34:38,218 - INFO - Chargement de l'image depuis : ../data/test_enfant.png
+2024-09-29 19:34:38,252 - INFO - Image redimensionnée à 1024x1024.
+2024-09-29 19:34:38,306 - INFO - Image transformée et prête pour la génération.
+2024-09-29 19:34:39,882 - INFO - Optimisation à la résolution 64x64
+2024-09-29 19:34:39,883 - ERROR - Une erreur est survenue
+2024-09-29 19:34:39,883 - ERROR - Détails de l'exception : 
+Traceback (most recent call last):
+  File "/notebooks/scripts/main.py", line 71, in main
+    generator.project_with_progressive_growing()
+  File "/notebooks/scripts/ImageGenerator.py", line 188, in project_with_progressive_growing
+    img_gen = F.interpolate(img_gen, size=(resolution, resolution), mode='bilinear', align_corners=False)
+                            ^^^^^^^
+UnboundLocalError: cannot access local variable 'img_gen' where it is not associated with a value
