@@ -1,0 +1,27 @@
+2024-09-30 11:36:46,012 - INFO - Démarrage de l'exécution
+2024-09-30 11:36:46,012 - INFO - Chargement du modèle depuis ../src/stylegan3-t-ffhq-1024x1024.pkl...
+2024-09-30 11:36:53,110 - INFO - Modèle chargé avec succès.
+2024-09-30 11:36:53,113 - INFO - ImageGenerator initialisé avec succès.
+2024-09-30 11:36:53,114 - INFO - Chargement de l'image depuis : ../data/test_enfant.png
+2024-09-30 11:36:53,183 - INFO - Image redimensionnée à 1024x1024.
+2024-09-30 11:36:53,277 - INFO - Image transformée et prête pour la génération.
+2024-09-30 11:36:56,116 - INFO - Optimisation à la résolution 64x64
+2024-09-30 11:36:59,993 - INFO - Étape 0/5000 à 64x64, Perte totale: 0.3383486568927765
+2024-09-30 11:37:45,995 - INFO - Étape 100/5000 à 64x64, Perte totale: 0.3293209373950958
+2024-09-30 11:38:32,169 - INFO - Étape 200/5000 à 64x64, Perte totale: 0.30787530541419983
+2024-09-30 11:39:18,465 - INFO - Étape 300/5000 à 64x64, Perte totale: 0.2764118015766144
+2024-09-30 11:40:04,787 - INFO - Étape 400/5000 à 64x64, Perte totale: 0.239323690533638
+2024-09-30 11:40:51,149 - INFO - Étape 500/5000 à 64x64, Perte totale: 0.210369274020195
+2024-09-30 11:41:37,496 - INFO - Étape 600/5000 à 64x64, Perte totale: 0.18748855590820312
+2024-09-30 11:42:23,860 - INFO - Étape 700/5000 à 64x64, Perte totale: 0.16671960055828094
+2024-09-30 11:43:10,203 - INFO - Étape 800/5000 à 64x64, Perte totale: 0.1536954790353775
+2024-09-30 11:43:56,555 - INFO - Étape 900/5000 à 64x64, Perte totale: 0.14406225085258484
+2024-09-30 11:44:42,920 - INFO - Étape 1000/5000 à 64x64, Perte totale: 0.13528992235660553
+2024-09-30 11:45:29,285 - INFO - Étape 1100/5000 à 64x64, Perte totale: 0.1268351823091507
+2024-09-30 11:46:15,645 - INFO - Étape 1200/5000 à 64x64, Perte totale: 0.11986454576253891
+2024-09-30 11:47:02,015 - INFO - Étape 1300/5000 à 64x64, Perte totale: 0.11450246721506119
+2024-09-30 11:47:48,360 - INFO - Étape 1400/5000 à 64x64, Perte totale: 0.11002472043037415
+2024-09-30 11:48:34,704 - INFO - Étape 1500/5000 à 64x64, Perte totale: 0.10541743040084839
+2024-09-30 11:49:21,039 - INFO - Étape 1600/5000 à 64x64, Perte totale: 0.10111916810274124
+2024-09-30 11:50:07,364 - INFO - Étape 1700/5000 à 64x64, Perte totale: 0.09747974574565887
+2024-09-30 11:50:53,693 - INFO - Étape 1800/5000 à 64x64, Perte totale: 0.09440744668245316

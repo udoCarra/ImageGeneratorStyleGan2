@@ -1,0 +1,71 @@
+2024-09-30 07:43:32,677 - INFO - Démarrage de l'exécution
+2024-09-30 07:43:32,677 - INFO - Chargement du modèle depuis ../src/stylegan3-t-ffhq-1024x1024.pkl...
+2024-09-30 07:43:43,034 - INFO - Modèle chargé avec succès.
+2024-09-30 07:43:43,036 - INFO - ImageGenerator initialisé avec succès.
+2024-09-30 07:43:43,037 - INFO - Chargement de l'image depuis : ../data/test_enfant.png
+2024-09-30 07:43:43,091 - INFO - Image redimensionnée à 1024x1024.
+2024-09-30 07:43:43,178 - INFO - Image transformée et prête pour la génération.
+2024-09-30 07:43:49,547 - INFO - Optimisation à la résolution 64x64
+2024-09-30 07:45:06,772 - INFO - Étape 0/5000 à 64x64, Perte totale: 0.3383486568927765
+2024-09-30 07:45:52,425 - INFO - Étape 100/5000 à 64x64, Perte totale: 0.18989333510398865
+2024-09-30 07:46:38,422 - INFO - Étape 200/5000 à 64x64, Perte totale: 0.1529487669467926
+2024-09-30 07:47:24,549 - INFO - Étape 300/5000 à 64x64, Perte totale: 0.1337786465883255
+2024-09-30 07:48:10,802 - INFO - Étape 400/5000 à 64x64, Perte totale: 0.1237722784280777
+2024-09-30 07:48:56,993 - INFO - Étape 500/5000 à 64x64, Perte totale: 0.11754106730222702
+2024-09-30 07:49:43,229 - INFO - Étape 600/5000 à 64x64, Perte totale: 0.11238230764865875
+2024-09-30 07:50:29,490 - INFO - Étape 700/5000 à 64x64, Perte totale: 0.10805467516183853
+2024-09-30 07:51:15,731 - INFO - Étape 800/5000 à 64x64, Perte totale: 0.10348580032587051
+2024-09-30 07:52:01,993 - INFO - Étape 900/5000 à 64x64, Perte totale: 0.09977550059556961
+2024-09-30 07:52:48,245 - INFO - Étape 1000/5000 à 64x64, Perte totale: 0.09669214487075806
+2024-09-30 07:53:34,517 - INFO - Étape 1100/5000 à 64x64, Perte totale: 0.09393510222434998
+2024-09-30 07:54:20,753 - INFO - Étape 1200/5000 à 64x64, Perte totale: 0.09169032424688339
+2024-09-30 07:55:07,013 - INFO - Étape 1300/5000 à 64x64, Perte totale: 0.08947254717350006
+2024-09-30 07:55:53,230 - INFO - Étape 1400/5000 à 64x64, Perte totale: 0.08740461617708206
+2024-09-30 07:56:39,465 - INFO - Étape 1500/5000 à 64x64, Perte totale: 0.08567526936531067
+2024-09-30 07:57:25,729 - INFO - Étape 1600/5000 à 64x64, Perte totale: 0.08416043967008591
+2024-09-30 07:58:11,964 - INFO - Étape 1700/5000 à 64x64, Perte totale: 0.08261629194021225
+2024-09-30 07:58:58,198 - INFO - Étape 1800/5000 à 64x64, Perte totale: 0.0813356265425682
+2024-09-30 07:59:44,482 - INFO - Étape 1900/5000 à 64x64, Perte totale: 0.07962782680988312
+2024-09-30 08:00:30,753 - INFO - Étape 2000/5000 à 64x64, Perte totale: 0.07821384072303772
+2024-09-30 08:01:16,994 - INFO - Étape 2100/5000 à 64x64, Perte totale: 0.07679226994514465
+2024-09-30 08:02:03,237 - INFO - Étape 2200/5000 à 64x64, Perte totale: 0.07549197226762772
+2024-09-30 08:02:49,461 - INFO - Étape 2300/5000 à 64x64, Perte totale: 0.07427690923213959
+2024-09-30 08:03:35,685 - INFO - Étape 2400/5000 à 64x64, Perte totale: 0.07306348532438278
+2024-09-30 08:04:21,934 - INFO - Étape 2500/5000 à 64x64, Perte totale: 0.0719735324382782
+2024-09-30 08:05:08,161 - INFO - Étape 2600/5000 à 64x64, Perte totale: 0.07091271132230759
+2024-09-30 08:05:54,408 - INFO - Étape 2700/5000 à 64x64, Perte totale: 0.06992172449827194
+2024-09-30 08:06:40,668 - INFO - Étape 2800/5000 à 64x64, Perte totale: 0.06887529045343399
+2024-09-30 08:07:26,916 - INFO - Étape 2900/5000 à 64x64, Perte totale: 0.0677434578537941
+2024-09-30 08:08:13,174 - INFO - Étape 3000/5000 à 64x64, Perte totale: 0.06699435412883759
+2024-09-30 08:08:59,431 - INFO - Étape 3100/5000 à 64x64, Perte totale: 0.06619877368211746
+2024-09-30 08:09:45,690 - INFO - Étape 3200/5000 à 64x64, Perte totale: 0.0652717649936676
+2024-09-30 08:10:31,956 - INFO - Étape 3300/5000 à 64x64, Perte totale: 0.06453799456357956
+2024-09-30 08:11:18,213 - INFO - Étape 3400/5000 à 64x64, Perte totale: 0.06390700489282608
+2024-09-30 08:12:04,511 - INFO - Étape 3500/5000 à 64x64, Perte totale: 0.06324292719364166
+2024-09-30 08:12:50,800 - INFO - Étape 3600/5000 à 64x64, Perte totale: 0.06249089539051056
+2024-09-30 08:13:37,093 - INFO - Étape 3700/5000 à 64x64, Perte totale: 0.06188105046749115
+2024-09-30 08:14:23,453 - INFO - Étape 3800/5000 à 64x64, Perte totale: 0.061338603496551514
+2024-09-30 08:15:09,803 - INFO - Étape 3900/5000 à 64x64, Perte totale: 0.06084953248500824
+2024-09-30 08:15:56,125 - INFO - Étape 4000/5000 à 64x64, Perte totale: 0.060410160571336746
+2024-09-30 08:16:42,470 - INFO - Étape 4100/5000 à 64x64, Perte totale: 0.05973648652434349
+2024-09-30 08:17:28,808 - INFO - Étape 4200/5000 à 64x64, Perte totale: 0.05916544049978256
+2024-09-30 08:18:15,150 - INFO - Étape 4300/5000 à 64x64, Perte totale: 0.05865919589996338
+2024-09-30 08:19:01,514 - INFO - Étape 4400/5000 à 64x64, Perte totale: 0.058158330619335175
+2024-09-30 08:19:47,846 - INFO - Étape 4500/5000 à 64x64, Perte totale: 0.05796823650598526
+2024-09-30 08:20:34,213 - INFO - Étape 4600/5000 à 64x64, Perte totale: 0.057056136429309845
+2024-09-30 08:21:20,564 - INFO - Étape 4700/5000 à 64x64, Perte totale: 0.05656934529542923
+2024-09-30 08:22:06,924 - INFO - Étape 4800/5000 à 64x64, Perte totale: 0.056134145706892014
+2024-09-30 08:22:53,277 - INFO - Étape 4900/5000 à 64x64, Perte totale: 0.055635105818510056
+2024-09-30 08:23:39,170 - INFO - Optimisation à la résolution 128x128
+2024-09-30 08:23:39,307 - ERROR - Une erreur est survenue
+2024-09-30 08:23:39,307 - ERROR - Détails de l'exception : 
+Traceback (most recent call last):
+  File "/notebooks/scripts/main.py", line 71, in main
+    generator.project_with_progressive_growing()
+  File "/notebooks/scripts/ImageGenerator.py", line 184, in project_with_progressive_growing
+    img_gen = self._lerp(prev_img_gen, img_gen, alpha)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/notebooks/scripts/ImageGenerator.py", line 117, in _lerp
+    return a + t * (b - a)
+                    ~~^~~
+RuntimeError: The size of tensor a (128) must match the size of tensor b (64) at non-singleton dimension 3
